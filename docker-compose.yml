@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+  contacts-mongodb:
+    image: mongo:6.0
+    container_name: contacts-mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=contacts
+      - MONGO_INITDB_ROOT_USERNAME=contacts
+      - MONGO_INITDB_ROOT_PASSWORD=contacts
+    volumes:
+      # seeding scripts
+      - ./mongo-entrypoint:/docker-entrypoint-initdb.d
+      # named volumes
+      - mongodb:/data/db
+      - mongoconfig:/data/configdb
+    networks:
+      - mongo_net
+    
+volumes:
+  # default dir on Ubuntu: /var/lib/docker/volumes
+  mongodb:
+  mongoconfig:
+
+networks:
+  mongo_net:
+    driver: bridge
